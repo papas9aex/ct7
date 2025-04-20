@@ -1,0 +1,31 @@
+public static class ExceptionHandler
+{
+    public static void HandleException(Exception ex, string operation)
+    {
+        string errorLevel = DetermineErrorLevel(ex);
+        LogError(ex, operation, errorLevel);
+        NotifyOnCriticalError(ex, errorLevel);
+    }
+
+    private static string DetermineErrorLevel(Exception ex)
+    {
+        return ex is SystemException ? "Fatal" : "Error";
+    }
+
+    private static void LogError(Exception ex, string operation, string errorLevel)
+    {
+        Console.WriteLine($"!!! Ошибка !!! {errorLevel}");
+        Console.WriteLine($"Операция: {operation}");
+        Console.WriteLine($"Сообщение: {ex.Message}");
+        Console.WriteLine($"Стек вызовов: {ex.StackTrace}");
+    }
+
+    private static void NotifyOnCriticalError(Exception ex, string errorLevel)
+    {
+        if (errorLevel == "Fatal")
+        {
+            Console.WriteLine("Отправка уведомления в Sentry...");
+            // Здесь можно реализовать отправку в Sentry или Application Insights
+        }
+    }
+}
